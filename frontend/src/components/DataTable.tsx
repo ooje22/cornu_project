@@ -39,7 +39,7 @@ export function DataTable<T>({ columns, rows, rowKey, empty, framed = true }: Da
             rows.map((row) => (
               <tr key={rowKey(row)}>
                 {columns.map((column) => (
-                  <td key={column.key} className={column.numeric ? "num" : undefined}>
+                  <td key={column.key} className={column.numeric ? "num" : undefined} data-label={column.header}>
                     {column.render(row)}
                   </td>
                 ))}

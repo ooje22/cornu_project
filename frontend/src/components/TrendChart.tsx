@@ -24,7 +24,8 @@ export function TrendChart({ points }: TrendChartProps) {
   const ticks = [min, Math.round((min + max) / 2), max];
 
   return (
-    <svg className="trend-chart" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="월별 민원 건수">
+    <div className="trend-scroll">
+      <svg className="trend-chart" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="월별 민원 건수">
       {ticks.map((tick) => {
         const y = pad.top + (1 - (tick - min) / range) * innerHeight;
         return (
@@ -50,6 +51,7 @@ export function TrendChart({ points }: TrendChartProps) {
           </text>
         </g>
       ))}
-    </svg>
+      </svg>
+    </div>
   );
 }

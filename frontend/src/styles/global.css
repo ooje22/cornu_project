@@ -100,13 +100,20 @@ a {
   display: flex;
   flex-direction: column;
   gap: var(--space-xxl);
+  min-width: 0;
 }
 
 .page-hero {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-end;
   gap: var(--space-lg);
+}
+
+.page-hero > div:first-child {
+  flex: 1 1 280px;
+  min-width: 0;
 }
 
 .eyebrow {
@@ -121,6 +128,7 @@ a {
 .display-sm {
   color: var(--color-on-dark);
   font-weight: 600;
+  overflow-wrap: break-word;
 }
 
 .display-md {
@@ -139,6 +147,7 @@ a {
   font-size: 16px;
   font-weight: 600;
   line-height: 1.4;
+  overflow-wrap: break-word;
 }
 
 .title-md {
@@ -146,6 +155,7 @@ a {
   font-size: 20px;
   font-weight: 600;
   line-height: 1.35;
+  overflow-wrap: break-word;
 }
 
 .caption {
@@ -185,6 +195,12 @@ a {
   grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr);
   gap: var(--space-lg);
   align-items: start;
+  min-width: 0;
+}
+
+.split > *,
+.layout-main-side > * {
+  min-width: 0;
 }
 
 .stack {
@@ -204,22 +220,40 @@ a {
   }
 }
 
+@media (max-width: 800px) {
+  .page-hero {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 @media (max-width: 767px) {
   .shell-main {
     width: min(100% - 32px, var(--content-max));
     padding-top: var(--space-lg);
+    padding-bottom: var(--space-xl);
   }
 
-  .page-hero {
-    flex-direction: column;
-    align-items: stretch;
+  .page {
+    gap: var(--space-xl);
   }
 
   .display-sm {
     font-size: 28px;
   }
 
+  .hero-actions,
   .hero-actions .btn {
     width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .display-md {
+    font-size: 28px;
+  }
+
+  .display-sm {
+    font-size: 24px;
   }
 }
