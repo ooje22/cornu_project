@@ -1,14 +1,42 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../components/Button";
+import heroImage from "../assets/about-hero.png";
+import categoryImage from "../assets/about-category.jpg";
+import reviewImage from "../assets/about-review.jpg";
+import dataImage from "../assets/about-data.jpg";
+import flowImage from "../assets/about-flow.jpg";
 import "../styles/about.css";
 
 const copy =
   "데이터렌즈는 민원 동향과 카테고리를 한 화면에서 보고 정리할 수 있게 만든 분석 서비스입니다.";
 
-const features = ["동향", "카테고리", "검토", "이슈", "민원"] as const;
-
-const areas = ["민원 동향", "카테고리", "이슈", "검토", "파일", "데이터"];
+const features = [
+  {
+    title: "민원 동향",
+    body: "기간별 민원 추이와 전체 현황을 한눈에 확인하세요.",
+    image: heroImage,
+    imageAlt: "민원 분석 화면",
+  },
+  {
+    title: "카테고리별 집계",
+    body: "민원 유형별 건수와 비중을 자동으로 집계하세요.",
+    image: categoryImage,
+    imageAlt: "건수와 비중을 보여주는 집계 화면",
+  },
+  {
+    title: "주요 이슈 및 검토",
+    body: "분석 결과를 검토하고 확인이 필요한 항목을 파악하세요.",
+    image: reviewImage,
+    imageAlt: "여러 현황을 함께 검토하는 화면",
+  },
+  {
+    title: "데이터 관리",
+    body: "분석한 데이터와 결과를 저장하고 다시 활용하세요.",
+    image: dataImage,
+    imageAlt: "저장된 데이터가 이어지는 모습",
+  },
+] as const;
 
 const spots = [
   { title: "대시보드", to: "/" },
@@ -42,17 +70,26 @@ const introSteps = [
 ] as const;
 
 export function AboutPage() {
-  const [feature, setFeature] = useState<(typeof features)[number]>("동향");
+  const [feature, setFeature] = useState<(typeof features)[number]["title"]>(features[0].title);
+  const activeFeature = features.find((item) => item.title === feature) ?? features[0];
 
   return (
     <div className="page about">
       <section className="about-hero">
-        <h1>DataLens 소개</h1>
-        <p>{copy}</p>
+        <h1>
+          민원 데이터 분석,
+          <br />
+          업로드 한 번으로 끝내세요.
+        </h1>
+        <p>
+          데이터 업로드부터 자동 집계, 민원 분류와 결과 관리까지.
+          <br className="about-hero-break" />
+          반복 업무를 줄이고 핵심 이슈를 빠르게 파악하세요.
+        </p>
         <div className="about-actions">
           <Button to="/">대시보드 보기</Button>
           <Button to="/signup" variant="secondary">
-            회원가입
+            서비스 시작하기
           </Button>
         </div>
       </section>
@@ -62,75 +99,61 @@ export function AboutPage() {
         <div className="about-tabs" role="tablist" aria-label="기능">
           {features.map((item) => (
             <button
-              key={item}
+              key={item.title}
               type="button"
               role="tab"
-              className={item === feature ? "is-active" : undefined}
-              aria-selected={item === feature}
-              onClick={() => setFeature(item)}
+              className={item.title === feature ? "is-active" : undefined}
+              aria-selected={item.title === feature}
+              onClick={() => setFeature(item.title)}
             >
-              {item}
+              {item.title}
             </button>
           ))}
         </div>
         <div className="about-stage" role="tabpanel">
-          <p className="about-stage-label">{feature}</p>
-          <p>{copy}</p>
+          <img className="about-stage-photo" src={activeFeature.image} alt={activeFeature.imageAlt} />
+          <div className="about-stage-copy">
+            <p className="about-stage-label">{activeFeature.title}</p>
+            <p>{activeFeature.body}</p>
+          </div>
         </div>
       </section>
-
-      <div className="about-marquee" aria-hidden="true">
-        <div className="about-marquee-track">
-          {[...areas, ...areas].map((item, index) => (
-            <span key={`${item}-${index}`}>{item}</span>
-          ))}
-        </div>
-      </div>
 
       <section className="about-bento" aria-labelledby="about-bento-title">
         <h2 id="about-bento-title">DataLens 소개</h2>
         <div className="about-bento-grid">
           <article className="about-card about-card-lead">
-            <h3>복잡한 민원 데이터 분석, 한 번에 해결하세요.</h3>
-            <p>
-              데이터 파일 업로드만으로 자동 집계부터 민원 유형 분류까지.
-              <br />
-              반복적인 데이터 정리 업무를 줄이고, 더 빠른 의사결정을 시작하세요.
-            </p>
+            <img className="about-lead-image" src={flowImage} alt="" />
+            <div className="about-lead-copy">
+              <h3>복잡한 민원 데이터 분석, 한 번에 해결하세요.</h3>
+              <p>
+                데이터 파일 업로드만으로 자동 집계부터 민원 유형 분류까지.
+                <br />
+                반복적인 데이터 정리 업무를 줄이고, 더 빠른 의사결정을 시작하세요.
+              </p>
+            </div>
           </article>
-          {introSteps.map((step, index) => (
+          {introSteps.map((step) => (
             <article key={step.title} className="about-card about-step">
-              <span className={`about-step-icon is-${step.icon}`} aria-hidden="true">
-                <StepIcon name={step.icon} />
-              </span>
-              <div>
-                <h3>
-                  {index + 1}. {step.title}
-                </h3>
-                <p>{step.body}</p>
+              <div className="about-step-head">
+                <h3>{step.title}</h3>
+                <span className={`about-step-icon is-${step.icon}`} aria-hidden="true">
+                  <StepIcon name={step.icon} />
+                </span>
               </div>
+              <p>{step.body}</p>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="about-split" aria-labelledby="about-split-title">
-        <h2 id="about-split-title">정리</h2>
-        <div className="about-split-grid">
-          <article className="about-card">
-            <h3>동향</h3>
-            <p>{copy}</p>
-          </article>
-          <article className="about-card">
-            <h3>카테고리</h3>
-            <p>{copy}</p>
-          </article>
-        </div>
-      </section>
-
       <section className="about-quote">
         <blockquote>
-          <p>{copy}</p>
+          <p>
+            데이터렌즈는 민원 동향과 카테고리를 한 화면에서
+            <br className="about-quote-break" />
+            보고 정리할 수 있게 만든 분석 서비스입니다.
+          </p>
         </blockquote>
       </section>
 
@@ -148,13 +171,10 @@ export function AboutPage() {
       </section>
 
       <section className="about-close">
-        <h2>시작하기</h2>
-        <p>{copy}</p>
+        <h2>데이터 정리는 간편하게, 문제 해결은 더 빠르게!</h2>
+        <p>DataLens로 반복적인 분석 업무를 줄이고 민원 데이터의 핵심을 확인해 보세요.</p>
         <div className="about-actions">
           <Button to="/">대시보드 보기</Button>
-          <Button to="/signup" variant="secondary">
-            회원가입
-          </Button>
         </div>
       </section>
     </div>
@@ -165,33 +185,35 @@ function StepIcon({ name }: { name: (typeof introSteps)[number]["icon"] }) {
   if (name === "chart") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 19V5M4 19h16" />
-        <path d="M8 15v-3M12 15V8M16 15v-5" />
+        <path d="M5 19V13" />
+        <path d="M10 19V9" />
+        <path d="M15 19V6" />
+        <path d="M20 19V3" />
       </svg>
     );
   }
   if (name === "check") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <rect x="6" y="4" width="12" height="16" rx="2" />
-        <path d="M9 12.5l2 2 4-4.5" />
+        <rect x="7" y="5" width="10" height="15" rx="2" />
+        <path d="M9 5.2V4.2A1.2 1.2 0 0 1 10.2 3h3.6A1.2 1.2 0 0 1 15 4.2v1" />
+        <path d="M9.4 13.1 11.2 15l3.4-3.8" />
       </svg>
     );
   }
   if (name === "flow") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M7 8a4 4 0 0 1 7-2l1 1" />
-        <path d="M16 7h3v3" />
-        <path d="M17 16a4 4 0 0 1-7 2l-1-1" />
-        <path d="M8 17H5v-3" />
+        <path d="M3.5 12.2 11 5h8.5v8.2l-7.6 7.3a1.6 1.6 0 0 1-2.2 0L3.5 12.2Z" />
+        <circle cx="8.2" cy="9.2" r="1.15" fill="currentColor" stroke="none" />
       </svg>
     );
   }
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M7 4h7l4 4v12H7z" />
-      <path d="M14 4v4h4M9 13h6M9 17h6" />
+      <ellipse cx="12" cy="6" rx="7" ry="3" />
+      <path d="M5 6v6c0 1.66 3.13 3 7 3s7-1.34 7-3V6" />
+      <path d="M5 12v6c0 1.66 3.13 3 7 3s7-1.34 7-3v-6" />
     </svg>
   );
 }
